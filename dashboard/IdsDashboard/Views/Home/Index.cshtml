@@ -9,10 +9,26 @@
         <h2 class="mb-1">Live Overview</h2>
         <p class="text-secondary mb-0">Real-time threat intelligence from Sentinel Sniffing Engine.</p>
     </div>
-    <button class="btn btn-outline-info d-flex align-items-center" style="border-radius: 50px; padding: 0.6rem 1.5rem;" onclick="location.reload()">
-        <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="me-2"><polyline points="23 4 23 10 17 10"></polyline><polyline points="1 20 1 14 7 14"></polyline><path d="M3.51 9a9 9 0 0 1 14.85-3.36L23 10M1 14l4.64 4.36A9 9 0 0 0 20.49 15"></path></svg>
-        Sync Data
-    </button>
+    <div class="d-flex gap-2">
+        <form asp-action="ArchiveThreats" asp-controller="Home" method="post" style="margin: 0;" onsubmit="return confirm('هل أنت متأكد من أرشفة جميع الهجمات؟ سيتم حفظها في ملف محلي ومسحها من الواجهة.')">
+            <button type="submit" class="btn btn-outline-warning d-flex align-items-center" style="border-radius: 50px; padding: 0.6rem 1.5rem;" title="Archive Attacks">
+                <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="me-2"><polyline points="21 8 21 21 3 21 3 8"></polyline><rect x="1" y="3" width="22" height="5"></rect><line x1="10" y1="12" x2="14" y2="12"></line></svg>
+                أرشفة الهجمات
+            </button>
+        </form>
+
+        <form asp-action="ExportThreats" asp-controller="Home" method="post" style="margin: 0;">
+            <button type="submit" class="btn btn-outline-success d-flex align-items-center" style="border-radius: 50px; padding: 0.6rem 1.5rem;" title="Export Detailed Report">
+                <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="me-2"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path><polyline points="7 10 12 15 17 10"></polyline><line x1="12" y1="15" x2="12" y2="3"></line></svg>
+                تصدير تفصيلي
+            </button>
+        </form>
+
+        <button class="btn btn-outline-info d-flex align-items-center" style="border-radius: 50px; padding: 0.6rem 1.5rem;" onclick="location.reload()">
+            <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="me-2"><polyline points="23 4 23 10 17 10"></polyline><polyline points="1 20 1 14 7 14"></polyline><path d="M3.51 9a9 9 0 0 1 14.85-3.36L23 10M1 14l4.64 4.36A9 9 0 0 0 20.49 15"></path></svg>
+            Sync Data
+        </button>
+    </div>
 </div>
 
 <!-- Key Performance Indicators (KPIs) Room -->
