@@ -1,0 +1,107 @@
+@model IEnumerable<IdsDashboard.Models.ThreatLog>
+
+@{
+    ViewData["Title"] = "Network Overview";
+}
+
+<div class="d-flex justify-content-between align-items-center mb-4 mt-2">
+    <div>
+        <h2 class="mb-1">Live Overview</h2>
+        <p class="text-secondary mb-0">Real-time threat intelligence from Sentinel Sniffing Engine.</p>
+    </div>
+    <button class="btn btn-outline-info d-flex align-items-center" style="border-radius: 50px; padding: 0.6rem 1.5rem;" onclick="location.reload()">
+        <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="me-2"><polyline points="23 4 23 10 17 10"></polyline><polyline points="1 20 1 14 7 14"></polyline><path d="M3.51 9a9 9 0 0 1 14.85-3.36L23 10M1 14l4.64 4.36A9 9 0 0 0 20.49 15"></path></svg>
+        Sync Data
+    </button>
+</div>
+
+<!-- Key Performance Indicators (KPIs) Room -->
+<div class="row g-4 mb-5">
+    <div class="col-md-3">
+        <div class="glass-panel stat-card text-center" style="align-items: center;">
+            <span class="stat-title">Total Threats</span>
+            <span class="stat-value text-gradient">@ViewBag.TotalThreats</span>
+        </div>
+    </div>
+    <div class="col-md-3">
+        <div class="glass-panel stat-card red-accent">
+            <span class="stat-title">Port Scans</span>
+            <span class="stat-value" style="color: var(--accent-danger);">@ViewBag.PortScans</span>
+        </div>
+    </div>
+    <div class="col-md-3">
+        <div class="glass-panel stat-card yellow-accent">
+            <span class="stat-title">Cleartext Traffic</span>
+            <span class="stat-value" style="color: var(--accent-warning);">@ViewBag.Cleartext</span>
+        </div>
+    </div>
+    <div class="col-md-3">
+        <div class="glass-panel stat-card purple-accent">
+            <span class="stat-title">DNS Anomalies</span>
+            <span class="stat-value" style="color: var(--accent-purple);">@ViewBag.DnsAnomalies</span>
+        </div>
+    </div>
+</div>
+
+<!-- Raw Logs Section -->
+<div class="glass-panel">
+    <div class="d-flex justify-content-between align-items-center mb-4">
+        <h4 class="mb-0">Recent Activity Logs</h4>
+        <div class="badge" style="background: rgba(255,255,255,0.05); border: 1px solid rgba(255,255,255,0.1); color: var(--text-secondary); padding: 0.5em 1em;">
+            <span style="display:inline-block; width: 6px; height: 6px; background: var(--accent-success); border-radius: 50%; margin-right: 6px;"></span>
+            Live Monitoring
+        </div>
+    </div>
+    
+    <div class="table-responsive">
+        <table class="table table-hover mb-0" style="min-width: 800px;">
+            <thead>
+                <tr>
+                    <th>Time</th>
+                    <th>Source Node</th>
+                    <th>Classification</th>
+                    <th>Port</th>
+                    <th>Details</th>
+                </tr>
+            </thead>
+            <tbody>
+                @if (!Model.Any())
+                {
+                    <tr>
+                        <td colspan="5" class="text-center py-5">
+                            <div class="mb-3" style="color: var(--text-muted);">
+                                <svg xmlns="http://www.w3.org/2000/svg" width="56" height="56" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1" stroke-linecap="round" stroke-linejoin="round" style="opacity: 0.5;"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"></path></svg>
+                            </div>
+                            <h5 style="color: var(--text-secondary);">No threats isolated yet.</h5>
+                            <p style="color: var(--text-muted); font-size: 0.9rem;">Network perimeter is secure and no anomalies have been passed to the db.</p>
+                        </td>
+                    </tr>
+                }
+                @foreach (var item in Model)
+                {
+                    <!-- Color assignment based on threat type -->
+                    var badgeClass = item.ThreatType switch
+                    {
+                        "Port Scan" => "bg-port-scan",
+                        "Cleartext Protocol" => "bg-cleartext",
+                        "DNS Anomaly" => "bg-dns",
+                        "ARP Spoofing" => "bg-arp-spoof",
+                        "ICMP Flood" => "bg-icmp-flood",
+                        "Sensitive Payload" => "bg-payload",
+                        _ => "bg-default"
+                    };
+
+                    <tr>
+                        <td style="color: var(--text-secondary); font-size: 0.9rem; white-space: nowrap;">@item.Timestamp.ToString("HH:mm:ss · MMM dd")</td>
+                        <td style="font-family: monospace; font-size: 0.95rem; color: #e2e8f0;">@item.SourceIp</td>
+                        <td>
+                            <span class="badge badge-threat @badgeClass">@item.ThreatType</span>
+                        </td>
+                        <td style="color: var(--text-secondary);">@(item.TargetPort == 0 ? "-" : item.TargetPort.ToString())</td>
+                        <td class="text-truncate" style="max-width: 300px; color: var(--text-secondary);" title="@item.Description">@item.Description</td>
+                    </tr>
+                }
+            </tbody>
+        </table>
+    </div>
+</div>
